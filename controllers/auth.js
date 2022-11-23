@@ -1,5 +1,5 @@
 const User = require('../models/user')
-const Business = require('../models/business')
+const Property = require('../models/property')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const helpers = require('../utils/helpers')
@@ -130,11 +130,11 @@ exports.check = async (req, res) => {
 
       const payload = { _id: user._id, first_name: user.first_name, last_name: user.last_name, phone: user.phone, email: user.email, country: user.country, city: user.city, address: user.address, photo: user.photo }
       const token = jwt.sign(payload, process.env.TOKEN_SECRET, { expiresIn: '2d' })
-      const businesses = await Business.find({ owner: user._id, active: true })
+      const properties = await Property.find({ owner: user._id, active: true })
 
       helpers.log(`New token issued for ${payload._id}`, 'info', 'server')
 
-      return res.json({ token: token, user: payload, businesses: businesses })
+      return res.json({ token: token, user: payload, properties: properties })
     })
   })
 }

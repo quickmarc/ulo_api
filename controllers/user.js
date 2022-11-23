@@ -1,5 +1,5 @@
 const User = require('../models/user')
-const Business = require('../models/business')
+const Property = require('../models/property')
 const bcrypt = require('bcrypt')
 const helpers = require('../utils/helpers')
 
@@ -71,7 +71,7 @@ exports.admin = async (req, res) => {
 exports.show = async (req, res) => {
   const id = req.params.user
 
-  await User.findById(id).populate(['businesses']).exec((err, user) => {
+  await User.findById(id).populate(['properties']).exec((err, user) => {
     if (err) {
       console.error(err)
       helpers.log(err.message, 'error', 'server')
@@ -124,7 +124,7 @@ exports.update = async (req, res) => {
     }
 
     // lock account if trying to update secured fields
-    if (data.businesses || data.beneficiaries || data.admin || data.active || data.visible || data.code) {
+    if (data.properties || data.beneficiaries || data.admin || data.active || data.visible || data.code) {
       await user.updateOne({ active: false })
       helpers.log(`Unauthorized update. User account ${user._id} disabled.`, 'error', 'action')
 
@@ -191,7 +191,7 @@ exports.delete = async (req, res) => {
         return res.status(500).json({ message: "An error occurred during account delete.", error: err.message })
       }
 
-      // TODO: also disable user businesses
+      // TODO: also disable user properties
 
       helpers.log(`User account ${user._id} deleted.`, 'info', 'action')
 
@@ -209,8 +209,8 @@ exports.destroy = async (req, res) => {
     }
 
     if (user) {
-      user.businesses.forEach(async id => {
-        await Business.findByIdAndDelete(id)
+      user.properties.forEach(async id => {
+        await Property.findByIdAndDelete(id)
       })
 
       await user.deleteOne()
