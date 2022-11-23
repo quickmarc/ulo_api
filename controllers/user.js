@@ -171,7 +171,7 @@ exports.update = async (req, res) => {
 }
 
 /**
- * Delete user account.
+ * Hide user account.
  * 
  * @param {import('express').Request} req 
  * @param {import('express').Response} res 
@@ -200,6 +200,12 @@ exports.delete = async (req, res) => {
   })
 }
 
+/**
+ * Delete user account.
+ * 
+ * @param {import('express').Request} req 
+ * @param {import('express').Response} res 
+ */
 exports.destroy = async (req, res) => {
   await User.findById(req.params.user, async (err, user) => {
     if (err) {
